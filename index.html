@@ -15,7 +15,7 @@
 <link rel="mask-icon" type="" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
 
 
-  <title>CodePen - 2128-5</title>
+  <title>CodePen - 2128 OFFICIAL</title>
   
   
   
@@ -59,6 +59,8 @@ body{
 <img id="pacman" class="hide" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Pac_Man.svg/1200px-Pac_Man.svg.png"/>
 
 <img id="redghost" class="hide" src="https://i.pinimg.com/originals/90/d2/e3/90d2e3ff2856032d36fcc7dc49334191.png"/>
+
+<img id="maze" class="hide" src="https://edencampbell.github.io/2128-5/img/maze.png"/>
   
   
       <script id="rendered-js" >
@@ -89,13 +91,21 @@ function makeBot() {
 function doResetBots() {
   console.log("resetBots");
   bots = [];
-  for (let i = 0; i < 5; i++) {
+  const bot0 = {};
+  bot0.x = 20;
+  bot0.y = 75;
+  bot0.r = 10;
+  bot0.dx = 0;
+  bot0.dy = 0;
+  bots.push(bot0);
+  
+  for (let i = 0; i < 0; i++) {
     bot = makeBot();
     bots.push(bot);
   }
   
   bots[0].imageid = 'pacman';
-  bots[1].imageid = 'redghost'
+  //bots[1].imageid = 'redghost'
   
 }
 doResetBots();
@@ -154,6 +164,8 @@ function moveBot(bot) {
 function moveBots() {
   checkCollide();
   ctx.clearRect(0, 0, c.width, c.height);
+  const maze = document.getElementById("maze");
+  ctx.drawImage(maze,0,0,c.width,c.height);
   for (let i = 0; i < bots.length; i++) {
     moveBot(bots[i]);
   }
@@ -224,7 +236,6 @@ document.addEventListener("keydown", dokeydown);
 
 document.getElementById("resetBots").addEventListener("click", doResetBots);
 
-//https://owenmcgann.github.io/2126-5-Owen-M/snd/ugh.wav// Need to make this another sound when bots colide
     </script>
 
   
