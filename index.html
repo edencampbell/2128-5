@@ -15,7 +15,7 @@
 <link rel="mask-icon" type="" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg" color="#111" />
 
 
-  <title>CodePen - 2128 OFFICIAL</title>
+  <title>CodePen - 2129-5</title>
   
   
   
@@ -27,10 +27,6 @@
 
 .hide{
   display:none;
-}
-
-body{
-  background-image : url("https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/1689558/original/Imagem28/put-your-face-in-a-game-like-pacman.jpg")
 }
 </style>
 
@@ -56,11 +52,11 @@ body{
 </div>
 <canvas id="myCanvas" width="600" height="300"></canvas>
 
-<img id="pacman" class="hide" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Pac_Man.svg/1200px-Pac_Man.svg.png"/>
+<img id="pacman" class = "hide" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Pac_Man.svg/1200px-Pac_Man.svg.png"/>
 
-<img id="redghost" class="hide" src="https://i.pinimg.com/originals/90/d2/e3/90d2e3ff2856032d36fcc7dc49334191.png"/>
+<img id="redghost" class= "hide" src="https://i.pinimg.com/originals/90/d2/e3/90d2e3ff2856032d36fcc7dc49334191.png"/>
 
-<img id="maze" class="hide" src="https://edencampbell.github.io/2128-5/img/maze.png"/>
+<img id="maze" class="hide" src="https://edencampbell.github.io/2128-5/img/maze.jpeg"/>
   
   
       <script id="rendered-js" >
@@ -91,70 +87,77 @@ function makeBot() {
 function doResetBots() {
   console.log("resetBots");
   bots = [];
-  const bot0 = {};
+  let bot0 = {};
   bot0.x = 20;
-  bot0.y = 75;
-  bot0.r = 10;
+  bot0.y = 70;
+  bot0.r = 15;
   bot0.dx = 0;
   bot0.dy = 0;
+  bot0.theta = 0;
+  bot0.omega = 0; //Angular velocity
+  bot0.v = 0; //linear velocity
+  bot0.dx = bot0.v*Math.cos(bot0.theta);
+  bot0.dy = bot0.v*Math.sin(bot0.theta);
   bots.push(bot0);
   
   for (let i = 0; i < 0; i++) {
     bot = makeBot();
     bots.push(bot);
   }
-  
-  bots[0].imageid = 'pacman';
-  //bots[1].imageid = 'redghost'
-  
+  bots[0].imgid = "pacman";
+  // bots[1].imgid = "redghost";
 }
-doResetBots();
+doResetBots();  
 function drawBot(bot) {
   ctx.beginPath();
   ctx.arc(bot.x, bot.y, bot.r, 0, 2 * Math.PI);
   ctx.stroke();
+  bot.theta = bot.theta + bot.omega;
   ctx.moveTo(bot.x, bot.y);
   x = bot.x + bot.r * Math.cos(bot.theta);
   y = bot.y - bot.r * Math.sin(bot.theta);
   ctx.lineTo(x, y);
   ctx.stroke();
-  if (bot.imageid) {
-    var img = document.getElementById(bot.imageid);
+  //if (bot.r == bots[0].r) {
+  if (bot.imgid) {
+    ctx.fillStyle = "rgba(255,0,0,.5)";
+    ctx.fill();
+
     ctx.save();
-    ctx.translate(bot.x,bot.y);
-    ctx.rotate(-bot.theta)
-    ctx.translate(-bot.x,-bot.y);
-    
-  ctx.drawImage(img, bot.x-bot.r, bot.y-bot.r,2*bot.r,2*bot.r);
+    ctx.translate(bot.x, bot.y);
+    ctx.rotate(-bot.theta);
+    ctx.translate(-bot.x, -bot.y);
+    var img = document.getElementById(bot.imgid);
+    ctx.drawImage(img, bot.x - bot.r, bot.y - bot.r, 2 * bot.r, 2 * bot.r);
+
+    ctx.restore();
   }
-  ctx.restore();
-  
 }
 
 function moveBot(bot) {
   timer = timer + 1;
-    let theTime = document.getElementById("theTime");
+  let theTime = document.getElementById("theTime");
   theTime.innerHTML = timer;
-  
+
   bot.x = bot.x + bot.dx;
   bot.y = bot.y - bot.dy;
   if (bot.y - bot.r < 0) {
     bot.dy = -bot.dy;
-    //ughsnd.play();
+    // ughsnd.play();
   }
   if (bot.x + bot.r >= c.width) {
     bot.dx = -bot.dx;
-    //ughsnd.play();
+    // ughsnd.play();
   }
   if (bot.y + bot.r >= c.height) {
     bot.dy = -bot.dy;
-    //ughsnd.play();
+    // ughsnd.play();
   }
   if (bot.x - bot.r <= 0) {
     bot.dx = -bot.dx;
-    //ughsnd.play();
+    // ughsnd.play();
   }
-  bot.theta = Math.atan2(bot.dy, bot.dx);
+  //bot.theta = Math.atan2(bot.dy, bot.dx);
 
   drawBot(bot);
 
@@ -165,7 +168,7 @@ function moveBots() {
   checkCollide();
   ctx.clearRect(0, 0, c.width, c.height);
   const maze = document.getElementById("maze");
-  ctx.drawImage(maze,0,0,c.width,c.height);
+  ctx.drawImage(maze, 0, 0,c.width,c.height);
   for (let i = 0; i < bots.length; i++) {
     moveBot(bots[i]);
   }
@@ -178,7 +181,7 @@ function checkCollide() {
         (bots[i].x - bots[j].x) ** 2 + (bots[i].y - bots[j].y) ** 2
       );
       if (d <= bots[i].r + bots[j].r) {
-        //smacksnd.play();
+        // smacksnd.play();
         if (bots[i].r < bots[j].r) {
           bots[j].r = Math.sqrt(bots[i].r ** 2 + bots[j].r ** 2);
           bots[i].r = 0;
@@ -197,45 +200,102 @@ function checkCollide() {
     if (bots[i].r == 0) bots.splice(i, 1);
   }
 }
-setInterval(moveBots, 100);
+
+let tickd = 100; // tickduration
+
+setInterval(moveBots, tickd);
 
 function dokeydown(e) {
   console.log(e.key);
   let stepSize = 2;
   if (e.key == "ArrowUp") {
     bots[0].dy = bots[0].dy + stepSize;
-        e.stopPropagation();
-
   }
 
   if (e.key == "ArrowRight") {
     bots[0].dx = bots[0].dx + stepSize;
-        e.stopPropagation();
-
   }
 
   if (e.key == "ArrowLeft") {
     bots[0].dx = bots[0].dx - stepSize;
-        e.stopPropagation();
-
   }
 
   if (e.key == "ArrowDown") {
-    bots[0].dy = bots[0].dy + stepSize;
-        e.stopPropagation();
-
+    bots[0].dy = bots[0].dy - stepSize;
   }
   //Stop the Bot
-    if (e.key == " ") {
+  if (e.key == " ") {
     bots[0].dy = 0;
     bots[0].dx = 0;
     e.stopPropagation();
   }
 }
+
 document.addEventListener("keydown", dokeydown);
 
 document.getElementById("resetBots").addEventListener("click", doResetBots);
 
+let speed = 6;
+
+
+function stopBot(){
+  let bot = bots[0];
+  bot.dx = 0;
+  bot.dy = 0;
+  bot.omega = 0;
+  console.dir(bot);
+}
+
+function botRight(){
+  let bot = bots[0];
+  bot.dx = 2*speed;
+  bot.dy = 0;
+}
+
+function botLeft(){
+  let bot = bots[0];
+  bot.dx = -2*speed;
+  bot.dy = 0;
+}
+
+function botUp(){
+  let bot = bots[0];
+  bot.dx =0;
+  bot.dy = 2*speed;
+}
+
+function botDown(){
+   let bot = bots[0];
+  bot.dx =0;
+  bot.dy = -2*speed;
+}
+
+function turnBot(omega){
+     let bot = bots[0];
+bot.omega = omega;
+  
+}
+
+function runMaze(){
+      setTimeout(botUp,0/speed);
+      setTimeout(botRight,1200/speed);
+      setTimeout(botLeft,20000/speed);
+      setTimeout(botLeft,20000/speed);
+
+      setTimeout(botDown,36000/speed);
+      setTimeout(botRight,44000/speed);
+      setTimeout(botDown,54000/speed);
+      setTimeout(botLeft,57000/speed);
+      setTimeout(botDown,62000/speed);
+
+
+
+
+  setTimeout(stopBot,63000/speed);
+  
+}
+
+runMaze();
     </script>
 
   
